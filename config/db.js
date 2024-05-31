@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 // Connection URL
-const url = "mongodb+srv://HeySatyam:20172522@cluster0.xqoozjj.mongodb.net/finanace?retryWrites=true&w=majority&appName=Cluster0";
+const url = "mongodb+srv://satyampandit021:20172522@rvbmhotelbooking.9hfzkrx.mongodb.net/apex?retryWrites=true&w=majority";
 async function connectToDatabase() {
   try {
     await mongoose.connect(url, {

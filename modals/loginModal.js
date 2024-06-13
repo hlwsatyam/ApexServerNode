@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  aadhaarNumber:{
+type: String,
+  },
+  panNumber:{
+type: String,
+  },
   state: {
     type: String,
   },
@@ -36,14 +42,12 @@ const userSchema = new mongoose.Schema({
       return email.toLowerCase();
     },
   },
-  adharFrontPic: {
-    type: String, // Assuming you'll store the image as a URL or base64 string
-    required: true,
+ 
+  userID:{
+    type:String,
+
   },
-  adharBackPic: {
-    type: String, // Assuming you'll store the image as a URL or base64 string
-    required: true,
-  },
+
   userPic: {
     type: String, // Assuming you'll store the image as a URL or base64 string
     required: true,

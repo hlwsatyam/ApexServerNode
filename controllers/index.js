@@ -9,7 +9,10 @@ const mongoose = require("mongoose");
 const {
   sendEmailToUserWithTheirPassword,
 } = require("../supportiveFunction/Emailer");
-const { validateEmail } = require("../supportiveFunction/validation");
+const {
+  validateEmail,
+  generateIdentifier,
+} = require("../supportiveFunction/validation");
 const hsbcBank = require("../modals/hsbcModal");
 const hdfcBank = require("../modals/hdfcModal");
 const idfcBank = require("../modals/IdfcModal");
@@ -18,12 +21,14 @@ const standardBank = require("../modals/standardModal");
 const loan = require("../modals/loanForm");
 const app = {
   signup: async (req, res) => {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, aadhaarNumber, password, panNumber, confirmPassword } =
+      req.body;
+   
     try {
       const file = req.files;
-      if (!name || name == "") {
+      if (!name || name == "" || name.length < 4) {
         return res.status(203).send({
-          message: "Name is required",
+          message: "Valid Name is required",
           status: false,
         });
       }
@@ -33,7 +38,6 @@ const app = {
           status: false,
         });
       }
-
       if (password?.length < 6) {
         return res.status(203).send({
           message: "Password must be 6 characters long",
@@ -46,25 +50,34 @@ const app = {
           status: false,
         });
       }
+      if (
+        !aadhaarNumber ||
+        aadhaarNumber == "" ||
+        isNaN(aadhaarNumber) ||
+        aadhaarNumber.length !== 12
+      ) {
+        return res.status(203).send({
+          message: "Valid Aadhaar is required",
+          status: false,
+        });
+      }
+      if (!panNumber || panNumber == "" || panNumber.length !== 10) {
+        return res.status(203).send({
+          message: "Valid PAN is required",
+          status: false,
+        });
+      }
+
       if (!file?.userPic[0]?.filename) {
         return res.status(203).send({
           message: "UserPic is required",
           status: false,
         });
       }
-      if (!file?.adhaarBackPic[0]?.filename) {
-        return res.status(203).send({
-          message: "AdharBackPic is required",
-          status: false,
-        });
-      }
-      if (!file?.adhaarFrontPic[0]?.filename) {
-        return res.status(203).send({
-          message: "AdharFrontPic is required",
-          status: false,
-        });
-      }
-      const isUserExist = await UserModal.findOne({ email: email });
+
+      const isUserExist = await UserModal.findOne({
+        or: [{ email, aadhaarNumber, panNumber }],
+      });
 
       if (isUserExist) {
         return res.status(203).send({
@@ -72,18 +85,18 @@ const app = {
           status: false,
         });
       }
+
       const userInfo = new UserModal({
         name: name,
         email: email,
+        userID: generateIdentifier(name, aadhaarNumber),
         password: password,
         userPic: file.userPic[0].filename,
-        adharBackPic: file.adhaarBackPic[0].filename,
-        adharFrontPic: file.adhaarFrontPic[0].filename,
+        aadhaarNumber,
+        panNumber,
         confirmPassword: confirmPassword,
       });
-
       await userInfo.save();
-
       res.status(200).send({
         message: "Welcome to the signup page",
         status: true,

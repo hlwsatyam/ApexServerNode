@@ -20,8 +20,7 @@ router.post(
   "/signup",
   upload.fields([
     { name: "userPic" },
-    { name: "adhaarFrontPic" },
-    { name: "adhaarBackPic" },
+ 
   ]),
   app.signup
 );
@@ -31,7 +30,6 @@ router.get("/", (req, res) => {
     message: "Server Now Running Successfully",
   });
 });
-
 router.post("/login", app.login);
 router.post("/updateuser", app.updateUser);
 router.post("/v1/user", app.userInfo);
@@ -43,6 +41,7 @@ router.post("/formSubmit/induslndBank", app.formSubmitinduslndBank);
 router.post("/formSubmit/axisBank", app.formSubmitaxisBank);
 router.post("/formSubmit/hsbc", app.formSubmithsbc);
 router.post("/formSubmit/hdfc", app.formSubmithdfc);
+
 router.post("/formSubmit/Idfc", app.formSubmitIdfc);
 router.post("/formSubmit/american", app.formSubmitamerican);
 router.post("/formSubmit/standard", app.formSubmitstandard);
@@ -58,6 +57,6 @@ router.post(
 );
 router.post("/v1/leadResponse", app.leadResponse);
 router.post("/v1/reapply", app.leadReapply);
-
+       
 // router.get("/search/:searchableText/:agentId/:page/:status", app.search);
 module.exports = router;
